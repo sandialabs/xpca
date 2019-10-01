@@ -90,5 +90,5 @@ The included `example_data.csv` is an exemplar data set since it includes
 continuous, binary, and count data.
 
 ## Questions?
-Email xpca @ sandia . gov if you have any questions.
+Email xpca@sandia.gov if you have any questions.
 
