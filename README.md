@@ -89,3 +89,6 @@ the run (simulation or reading in your own data) will output a `theta.csv` and
 The included `example_data.csv` is an exemplar data set since it includes
 continuous, binary, and count data.
 
+## Questions?
+Email xpca @ sandia . gov if you have any questions.
+
