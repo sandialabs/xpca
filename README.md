@@ -2,7 +2,7 @@
 
 * [Background](#background)
 * [Install](#install)
-* [References](#references)
+* [Example](#example)
 
 ## Background
 XPCA factors an observed data matrix X (m rows x n columns) into two factors, A (m x k) and B (n x k) where rank = k. Each row in X corresponds to an observed element, and each column corresponds to a feature of the observed element. These columns can be of mixed variable types - continuous, count, binary, etc. 
@@ -36,6 +36,7 @@ Michael E. Tipping and Christopher M. Bishop. Probabilistic principal component 
 ## Install
 
 `xpcapy` requires:
+* Python 3 (tested on 3.7)
 * [NumPy](http://scipy.org/index.html) 1.11.0
 * [SciPy](http://scipy.org/index.html) 0.17.1
 
@@ -52,4 +53,21 @@ To install `xpcapy`:
 ```bash
 /path/to/xpcapy$ python setup.py install
 ```
+## Example
 
+Refer to `example.py` for an example as to how to simulate data and read in a
+file. This script will run xpca and save off theta and final fitted matrix to
+a file. 
+
+Usage:
+```
+# Just run it to simulate data
+$ python3 example.py
+# Or to read in a file of your own
+$ python3 example.py --filename example_data.csv --rank 3
+```
+Both variations of the run (simulation or reading in your own data)
+ will output a `theta.csv` and `fitted.csv`
+
+The included `example_data.csv` is an exemplar data set since it includes
+continuous, binary, and count data.

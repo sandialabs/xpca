@@ -2,28 +2,48 @@ from scipy.special import ndtr
 import xpcapy
 import time
 import numpy as np
-
-start = time.time()
-
+import argparse
 import logging
-logging.getLogger().setLevel(logging.INFO)
 
-m=5000
-n=40
-r=5
-print ("Generating %i x %i matrix of rank %i" % (m,n,r))
-# Read in data
-data = xpcapy.simulate.simulate_data(mrows=m, ncols=n, rank=r, prop_binary=0.2)
-decomper = xpcapy.xpca.XPCA(rank=r)
-solver = 'alt-newt'
-imputation = 'median'
-print ("Using %s solve and %s imputation" % (solver, imputation))
+if __name__ == "__main__":
+    start_main = time.time()
+    logging.getLogger().setLevel(logging.INFO)
 
-d = decomper.fit(data.data_matrix, method=solver, imputation=imputation, cdf=ndtr)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--rank", action="store", type=int, default=2,
+            help="Desired rank of decomposition")
+    parser.add_argument("--filename", action="store", 
+            help="Full path of data in csv format")
 
-np.savetxt("theta.csv",d.theta, delimiter=',')
-np.savetxt("fitted.csv", d.fitted, delimiter=',')
+    args = parser.parse_args()
+    r = args.rank
 
-end = time.time()
+    # If data was provided
+    if args.filename:
+        data = np.genfromtxt(args.filename, delimiter=',')
+    # Simulate data since no filename was given
+    else:
+        # Pick arbitrary dimensions and rank
+        m=5000
+        n=40
+        print ("Generating %i x %i matrix of rank %i" % (m,n,r))
+        simulation = xpcapy.simulate.simulate_data(mrows=m, ncols=n, rank=r, prop_binary=0.2)
+        data = simulation.data_matrix
 
-print ("elapsed time: %f sec" % ((end-start)))
+    # Decompose data
+    decomper = xpcapy.xpca.XPCA(rank=r)
+    solver = 'alt-newt'
+    imputation = 'median'
+    print ("Using %s solve and %s imputation" % (solver, imputation))
+
+    start = time.time()
+    d = decomper.fit(data, method=solver, imputation=imputation, cdf=ndtr)
+    end = time.time()
+    print ("Elapsed time for decomposition: %f sec" % (end-start))
+
+    print ("Saving off solved theta and final fitted matrices...")
+    np.savetxt("theta.csv",d.theta, delimiter=',')
+    np.savetxt("fitted.csv", d.fitted, delimiter=',')
+    
+    end_main = time.time()
+    print ("Complete. Elapsed time %f sec" % (end_main-start_main))
